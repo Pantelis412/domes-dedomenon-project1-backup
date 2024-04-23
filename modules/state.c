@@ -109,8 +109,15 @@ State state_create() {
 // Επιστρέφει τις βασικές πληροφορίες του παιχνιδιού στην κατάσταση state
 
 StateInfo state_info(State state) {
-	// Προς υλοποίηση
-	return NULL;
+	//Δημιουργία του state_information
+	StateInfo state_information=malloc(sizeof(*state_info));
+	
+	//Προσθέτω τις γενικές πληροφορίες
+	state_information->paused=state->info.paused;
+	state_information->score=state->info.score;
+	state_information->spaceship=state->info.spaceship;
+
+	return state_information;
 }
 
 // Επιστρέφει μια λίστα με όλα τα αντικείμενα του παιχνιδιού στην κατάσταση state,
