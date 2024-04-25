@@ -116,7 +116,6 @@ StateInfo state_info(State state) {
 	state_information->paused=state->info.paused;
 	state_information->score=state->info.score;
 	state_information->spaceship=state->info.spaceship;
-
 	return state_information;
 }
 
@@ -125,8 +124,18 @@ StateInfo state_info(State state) {
 // γωνία top_left και κάτω δεξιά bottom_right.
 
 List state_objects(State state, Vector2 top_left, Vector2 bottom_right) {
-	// Προς υλοποίηση
-	return NULL;
+	List list_objects=list_create(free);
+	ListNode list_node= LIST_BOF;
+	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
+		Object helpful=(vector_node_value(state->objects, vectornode));
+		if(helpful->position.x>top_left.x && helpful->position.y<top_left.y && helpful->position.x<bottom_right.x && helpful->position.y>bottom_right.y ){
+			list_insert_next(list_objects, list_node, helpful);
+			list_node=list_last(list_objects);
+		}
+
+	}
+	
+	return list_objects;
 }
 
 // Ενημερώνει την κατάσταση state του παιχνιδιού μετά την πάροδο 1 frame.
