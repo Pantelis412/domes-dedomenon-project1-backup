@@ -114,7 +114,7 @@ List state_objects(State state, Vector2 top_left, Vector2 bottom_right) {
 	List list_objects=list_create(free);
 	ListNode list_node= LIST_BOF;
 	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
-		Object helpful=(vector_node_value(state->objects, vectornode));
+		Object helpful=vector_node_value(state->objects, vectornode);
 		if(helpful->position.x>top_left.x && helpful->position.y<top_left.y && helpful->position.x<bottom_right.x && helpful->position.y>bottom_right.y ){
 			list_insert_next(list_objects, list_node, helpful);
 			list_node=list_last(list_objects);
@@ -129,7 +129,24 @@ List state_objects(State state, Vector2 top_left, Vector2 bottom_right) {
 // Το keys περιέχει τα πλήκτρα τα οποία ήταν πατημένα κατά το frame αυτό.
 
 void state_update(State state, KeyState keys) {
-	// Προς υλοποίηση
+	// Κίνηση αντικειμένων
+	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
+		Object helpful=vector_node_value(state->objects, vectornode);
+		helpful->position = vec2_add(helpful->position,helpful->speed);
+	}
+
+	//Περιστροφή διαστημοπλοίου
+	if(keys->left)
+		state->info.spaceship->orientation = vec2_rotate(state->info.spaceship->orientation, SPACESHIP_ROTATION);
+	else if(keys->right)
+		state->info.spaceship->orientation = vec2_rotate(state->info.spaceship->orientation, -SPACESHIP_ROTATION);
+
+	//Επιτάχυνση διαστημοπλοίου
+	if(keys->up)
+	state->info.spaceship->speed = vec2_add(state->info.spaceship->speed, vec2_scale(state->info.spaceship->orientation, SPACESHIP_ACCELERATION));
+	//Επιβράδυνση διαστημοπλοίου
+	else if(!keys->up && state->speed_factor>1)
+	state->info.spaceship->speed = vec2_scale(state->info.spaceship->speed, SPACESHIP_SLOWDOWN);
 }
 
 // Καταστρέφει την κατάσταση state ελευθερώνοντας τη δεσμευμένη μνήμη.
