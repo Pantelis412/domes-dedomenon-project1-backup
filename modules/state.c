@@ -6,19 +6,6 @@
 #include "state.h"
 #include "vec2.h"
 
-
-// Οι ολοκληρωμένες πληροφορίες της κατάστασης του παιχνιδιού.
-// Ο τύπος State είναι pointer σε αυτό το struct, αλλά το ίδιο το struct
-// δεν είναι ορατό στον χρήστη.
-
-struct state {
-	Vector objects;			// περιέχει στοιχεία Object (αστεροειδείς, σφαίρες)
-	struct state_info info;	// Γενικές πληροφορίες για την κατάσταση του παιχνιδιού
-	int next_bullet;		// Αριθμός frames μέχρι να επιτραπεί ξανά σφαίρα
-	float speed_factor;		// Πολλαπλασιαστής ταχύτητς (1 = κανονική ταχύτητα, 2 = διπλάσια, κλπ)
-};
-
-
 // Δημιουργεί και επιστρέφει ένα αντικείμενο
 
 static Object create_object(ObjectType type, Vector2 position, Vector2 speed, Vector2 orientation, double size) {

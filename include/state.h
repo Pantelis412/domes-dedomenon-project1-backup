@@ -2,6 +2,7 @@
 
 #include "raylib.h"
 #include "ADTList.h"
+#include "ADTVector.h"
 
 // Χαρακτηριστικά αντικειμένων
 #define ASTEROID_NUM 6
@@ -57,6 +58,15 @@ typedef struct key_state {
 	bool p;
 }* KeyState;
 
+// Οι ολοκληρωμένες πληροφορίες της κατάστασης του παιχνιδιού.
+// Ο τύπος State είναι pointer σε αυτό το struct, αλλά το ίδιο το struct
+// δεν είναι ορατό στον χρήστη.
+struct state {
+	Vector objects;			// περιέχει στοιχεία Object (αστεροειδείς, σφαίρες)
+	struct state_info info;	// Γενικές πληροφορίες για την κατάσταση του παιχνιδιού
+	int next_bullet;		// Αριθμός frames μέχρι να επιτραπεί ξανά σφαίρα
+	float speed_factor;		// Πολλαπλασιαστής ταχύτητς (1 = κανονική ταχύτητα, 2 = διπλάσια, κλπ)
+};
 // Η κατάσταση του παιχνιδιού (handle)
 typedef struct state* State;
 

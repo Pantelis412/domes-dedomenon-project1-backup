@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include "acutest.h"			// Απλή βιβλιοθήκη για unit testing
-
+#include "math.h"
 #include "state.h"
 
 
@@ -15,7 +15,7 @@
 // Ελέγχει την (προσεγγιστική) ισότητα δύο double
 // (λόγω λαθών το a == b δεν είναι ακριβές όταν συγκρίνουμε double).
 static bool double_equal(double a, double b) {
-	return abs(a-b) < 1e-6;
+	return fabs(a-b) < 1e-6;
 }
 
 // Ελέγχει την ισότητα δύο διανυσμάτων
@@ -29,14 +29,22 @@ void test_state_create() {
 
 	State state = state_create();
 	TEST_ASSERT(state != NULL);
-
 	StateInfo info = state_info(state);
 	TEST_ASSERT(info != NULL);
 
 	TEST_ASSERT(!info->paused);
 	TEST_ASSERT(info->score == 0);
-
+	
 	// Προσθέστε επιπλέον ελέγχους
+	TEST_ASSERT(state->speed_factor==1);
+	TEST_ASSERT(state->next_bullet == 0);
+	TEST_ASSERT(state->objects != NULL);
+}
+
+void test_state_objects(){
+	State state = state_create();
+	TEST_ASSERT(state != NULL && state_info(state) != NULL);
+
 }
 
 void test_state_update() {
