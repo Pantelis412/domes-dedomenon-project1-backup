@@ -152,9 +152,22 @@ void state_update(State state, KeyState keys) {
 	if(keys->up)
 	state_info(state)->spaceship->speed = vec2_add(state_info(state)->spaceship->speed, vec2_scale(state_info(state)->spaceship->orientation, SPACESHIP_ACCELERATION));
 	//Επιβράδυνση διαστημοπλοίου
-	else if(!keys->up && state->speed_factor>1)
+	else if(!keys->up && state_info(state)->spaceship->speed.x/state_info(state)->spaceship->speed.y > 0)//για να μην γίνεται επ' αόριστον
 	state_info(state)->spaceship->speed = vec2_scale(state_info(state)->spaceship->speed, SPACESHIP_SLOWDOWN);
 	
+	//Έλεγχος και δημιουργία αστεροειδών
+	int asteroid_counter=0;
+	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
+		Object helpful=vector_node_value(state->objects, vectornode);
+		if(helpful->type == ASTEROID){
+			double distance =vec2_distance(state_info(state)->spaceship->position, helpful ->position);
+			if (distance <= ASTEROID_MAX_DIST)
+				asteroid_counter++;
+		}
+	}
+	if(asteroid_counter< ASTEROID_NUM){
+		add_asteroids(state, ASTEROID_NUM-asteroid_counter);
+	}
 	
 }
 
