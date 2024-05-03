@@ -74,6 +74,7 @@ void test_state_update() {
 // Λίστα με όλα τα tests προς εκτέλεση
 TEST_LIST = {
 	{ "test_state_create", test_state_create },
+	{ "test_state_objects", test_state_objects },
 	{ "test_state_update", test_state_update },
 
 	{ NULL, NULL } // τερματίζουμε τη λίστα με NULL
