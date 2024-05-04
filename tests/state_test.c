@@ -68,6 +68,12 @@ void test_state_update() {
 	TEST_ASSERT( vec2_equal( state_info(state)->spaceship->speed,    (Vector2){0,SPACESHIP_ACCELERATION}) );
 
 	// Προσθέστε επιπλέον ελέγχους
+
+	// test gia pause
+	// keys.p = true;
+    // state_update(state, &keys);
+    // TEST_ASSERT( state_info(state)->paused );
+    // keys.p = false;
 }
 
 

@@ -63,6 +63,17 @@ static void add_asteroids(State state, int num) {
 	}
 }
 
+//Προσθέτει μία σφαίρα στο παιχνίδι
+
+static void add_bullet(State state){
+	Vector2 speed=vec2_add(state_info(state)->spaceship->speed, vec2_scale(state_info(state)->spaceship->orientation, BULLET_SPEED));
+	Vector2 position= state_info(state)->spaceship->position;
+	Vector2 orientation= state_info(state)->spaceship->orientation;
+	double size=BULLET_SIZE;
+	Object bullet = create_object(BULLET, position, speed, orientation, size);
+	vector_insert_last(state->objects, bullet);
+}
+
 // Δημιουργεί και επιστρέφει την αρχική κατάσταση του παιχνιδιού
 
 State state_create() {
@@ -136,6 +147,10 @@ void state_update(State state, KeyState keys) {
 	}
 	if(state_info(state)->paused && !keys->n)//Αν το παιχνίδι βρίσκεται σε pause και δεν είναι πατημένο το n τερματίζει η συνάρτηση
 		return;
+
+	//ΕΝΑΡΞΗ
+	static int frame_counter=0;
+	frame_counter++;
 	// Κίνηση αντικειμένων
 	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
 		Object helpful=vector_node_value(state->objects, vectornode);
@@ -169,6 +184,9 @@ void state_update(State state, KeyState keys) {
 		add_asteroids(state, ASTEROID_NUM-asteroid_counter);
 	}
 	
+	//Προσθήκη σφαίρας
+	if(frame_counter >= BULLET_DELAY && keys->space)
+		add_bullet(state);
 }
 
 // Καταστρέφει την κατάσταση state ελευθερώνοντας τη δεσμευμένη μνήμη.

@@ -18,7 +18,7 @@ __Α.Μ.__: sdi2300079
 
 - Άσκηση 1: state_info(...),state_objects(...), επιπλέον έλεγχοι στο test_create(),___(test_state_objects() θελει ακόμα) ___state.c
 - Άσκηση 2: state_update(...),____(test_state_update() θέλει ακόμα)
-- Άσκηση 3: 
+- Άσκηση 3: add_bullet(state)
 
 ### Documentation
 
@@ -35,6 +35,7 @@ __Α.Μ.__: sdi2300079
 
 ### Άσκηση 3
 - τσκάρει πόσοι αστεροειδείς απέχουν ASTEROID_MAX_DIST από το διαστημόπλοιο και αν είναι λιγότεροι από ASTEROID_NUM δημιουργεί όσους ακόμα χρειάζεται
+-Δημιουργία της add_bullet
 
 
 
