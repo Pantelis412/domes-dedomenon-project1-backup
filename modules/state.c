@@ -68,6 +68,18 @@ static void add_asteroids(State state, int num) {
 	}
 }
 
+//Δημιουργεί δύο μισούς αστεροιεδής από τον αρχικό με το μισό μέγεθος,
+//τυχαία κατεύθυνση και ταχύτητα 1,5 φορά μεγαλύτερη
+//Είναι τύπου Object ώστε αφού καταστραφούν ο αρχικός αστεροειδής και η σφαίρα
+//να μπορεί να προστεθεί στο vector με τα υπόλοιιπα αντικείμενα
+
+Object add_half_asteroids(State state, Object big_asteroid){
+	Vector2 position= state->info.spaceship->position;
+	Vector2 speed=vec2_from_polar(big_asteroid->speed.x,randf(0,2*PI));
+	Object half_asteroid= create_object(ASTEROID,position,speed,(Vector2){0,0},big_asteroid->size/2);
+	return half_asteroid;
+}
+
 //Προσθέτει μία σφαίρα στο παιχνίδι
 
 static void add_bullet(State state){
@@ -158,7 +170,7 @@ void state_update(State state, KeyState keys) {
 	// Κίνηση αντικειμένων
 	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
 		Object helpful=vector_node_value(state->objects, vectornode);
-		helpful->position = vec2_add(helpful->position,helpful->speed);
+		helpful->position = vec2_add(helpful->position,vec2_scale(helpful->speed,state->speed_factor));//
 	}
 
 	//Περιστροφή διαστημοπλοίου
@@ -184,9 +196,13 @@ void state_update(State state, KeyState keys) {
 				asteroid_counter++;
 		}
 	}
-	if(asteroid_counter< ASTEROID_NUM)
+	if(asteroid_counter< ASTEROID_NUM){
 		add_asteroids(state, ASTEROID_NUM-asteroid_counter);
-	
+		state_info(state)->score+=1;
+	}
+	//Αν το σκορ είναι πολλαπλάσιο του 100 αυξάνω το speed factor κατά 10%
+	if(state_info(state)->score%100 == 0)
+		state->speed_factor*=1.1;
 	
 	//Προσθήκη σφαίρας
 	if(state->next_bullet >= BULLET_DELAY && keys->space)
@@ -218,19 +234,53 @@ void state_update(State state, KeyState keys) {
 				Object helpful2=vector_node_value(state->objects, vectornode2);
 				nodecounter_for_asteroid++;
 				if(helpful2->type==ASTEROID && CheckCollisionCircles(helpful->position,helpful->size,helpful2->position,helpful2->size)){
-					//διαγράφω τον αστεροειδή που συγκρούστηκε
-					Object temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
-					vector_set_at(state->objects,nodecounter_for_asteroid,temp);
-					vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
-					//όμοια για την σφαίρα
-					temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο σφαίρα
-					vector_set_at(state->objects,nodecounter_for_bullet,temp);
-					vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+					//Δημιουργούμε τους δύο νέους αστεροειδείς που θα προκύψουν μετά τη σύγκρουση
+					bool flag=false;
+					Object new_asteroid1, new_asteroid2;
+					if(helpful2->size/2>ASTEROID_MIN_SIZE){
+					new_asteroid1=add_half_asteroids(state, helpful2);
+					new_asteroid2=add_half_asteroids(state, helpful2);
+					flag = true;
+					}
+					//Αφαιρούμε σφαίρα και αστεροειδή					
+					//Σε περίπτωση που η σφαίρα είναι ο τελευταίος κόμβος του vector θα πρέπει να αφαιρεθεί πρίν τον αστεροειδή
+					if(nodecounter_for_bullet==vector_size(state->objects)){
+						//διαγράφω τη σφαίρα που συγκρούστηκε
+						Object temp=vector_node_value(state->objects,vectornode);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται η σφαίρα
+						vector_set_at(state->objects,nodecounter_for_bullet,temp);
+						vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+						//όμοια για τον αστεροειδή
+						temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
+						vector_set_at(state->objects,nodecounter_for_asteroid,temp);
+						vector_remove_last(state->objects);//στη συνεχεια διαγράφω το τελευταίο στοιχείο
+					}
+					else{
+						//διαγράφω τον αστεροειδή που συγκρούστηκε
+						Object temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
+						vector_set_at(state->objects,nodecounter_for_asteroid,temp);
+						vector_remove_last(state->objects);//στη συνεχεια διαγράφω το τελευταίο στοιχείο
+						//όμοια για την σφαίρα
+						temp=vector_node_value(state->objects,vectornode);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται η σφαίρα
+						vector_set_at(state->objects,nodecounter_for_bullet,temp);
+						vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+					}
+					//Προσθέτουμε τους αστεροειδείς στο τέλος του vector
+					if(flag==true){
+						vector_insert_last(state->objects, new_asteroid1);
+						vector_insert_last(state->objects, new_asteroid2);
+					}else{
+						free(new_asteroid1);
+						free(new_asteroid2);
+					}
+
+
 					//μειώνω το σκορ κατά 10
 					state_info(state)->score-=10;
-				}
+					}
 		}
-}}
+	}
+
+}
 
 // Καταστρέφει την κατάσταση state ελευθερώνοντας τη δεσμευμένη μνήμη.
 
