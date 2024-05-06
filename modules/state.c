@@ -6,6 +6,11 @@
 #include "state.h"
 #include "vec2.h"
 
+int compare_ints(Pointer a, Pointer b) {
+    int* ia = a;
+    int* ib = b;
+    return *ia - *ib;       // αρνητικός, μηδέν ή θετικός, ανάλογα με τη διάταξη των a,b
+}
 // Δημιουργεί και επιστρέφει ένα αντικείμενο
 
 static Object create_object(ObjectType type, Vector2 position, Vector2 speed, Vector2 orientation, double size) {
@@ -149,8 +154,7 @@ void state_update(State state, KeyState keys) {
 		return;
 
 	//ΕΝΑΡΞΗ
-	static int frame_counter=0;
-	frame_counter++;
+	state->next_bullet++;
 	// Κίνηση αντικειμένων
 	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
 		Object helpful=vector_node_value(state->objects, vectornode);
@@ -180,14 +184,53 @@ void state_update(State state, KeyState keys) {
 				asteroid_counter++;
 		}
 	}
-	if(asteroid_counter< ASTEROID_NUM){
+	if(asteroid_counter< ASTEROID_NUM)
 		add_asteroids(state, ASTEROID_NUM-asteroid_counter);
-	}
+	
 	
 	//Προσθήκη σφαίρας
-	if(frame_counter >= BULLET_DELAY && keys->space)
+	if(state->next_bullet >= BULLET_DELAY && keys->space)
 		add_bullet(state);
-}
+
+	//Συγκρούσεις
+
+	//Πρώτα τσεκάρω για αστεροειδή με διαστημόπλοιο
+	int nodecounter_for_spaceship=0;
+	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects, vectornode)){
+		Object helpful=vector_node_value(state->objects, vectornode);
+		nodecounter_for_spaceship++;
+		if(helpful->type == ASTEROID && CheckCollisionCircles(state_info(state)->spaceship->position,SPACESHIP_SIZE,helpful->position,helpful->size)){
+			state_info(state)->score/=2;//χάνεται το μισό σκορ
+			Object temp=vector_node_value(state->objects,vectornode);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
+			vector_set_at(state->objects,nodecounter_for_spaceship,temp);
+			vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+		}
+	}
+
+	//Τσεκάρω για αστεροειδή με σφαίρα
+	int nodecounter_for_bullet=0;
+	for(VectorNode vectornode= vector_first(state->objects); vectornode!=VECTOR_EOF; vectornode=vector_next(state->objects,vectornode)){
+		Object helpful=vector_node_value(state->objects, vectornode);
+		nodecounter_for_bullet++;
+		int nodecounter_for_asteroid=0;
+		if(helpful->type==BULLET)
+			for(VectorNode vectornode2= vector_first(state->objects); vectornode2!=VECTOR_EOF; vectornode2=vector_next(state->objects,vectornode2)){
+				Object helpful2=vector_node_value(state->objects, vectornode2);
+				nodecounter_for_asteroid++;
+				if(helpful2->type==ASTEROID && CheckCollisionCircles(helpful->position,helpful->size,helpful2->position,helpful2->size)){
+					//διαγράφω τον αστεροειδή που συγκρούστηκε
+					Object temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
+					vector_set_at(state->objects,nodecounter_for_asteroid,temp);
+					vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+					//όμοια για την σφαίρα
+					temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο σφαίρα
+					vector_set_at(state->objects,nodecounter_for_bullet,temp);
+					vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+					//μειώνω το σκορ κατά 10
+					state_info(state)->score-=10;
+				}
+		}
+}}
 
 // Καταστρέφει την κατάσταση state ελευθερώνοντας τη δεσμευμένη μνήμη.
 
