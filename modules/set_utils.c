@@ -7,8 +7,9 @@ Pointer set_find_eq_or_greater(Set set, Pointer value){
         return value_pointer;
     set_insert(set, value);
     SetNode node= set_find_node(set, value);
-    node = set_next(set, node);
-    value_pointer = set_node_value(set, node);
+    SetNode node2 = set_next(set, node);
+    value_pointer = set_node_value(set, node2);
+    set_remove(set, value);
     return value_pointer;
 }
 
@@ -18,7 +19,8 @@ Pointer set_find_eq_or_smaller(Set set, Pointer value){
         return value_pointer;
     set_insert(set, value);
     SetNode node= set_find_node(set, value);
-    node = set_previous(set, node);
-    value_pointer = set_node_value(set, node);
+    SetNode node2 = set_previous(set, node);
+    value_pointer = set_node_value(set, node2);
+    set_remove(set, value);
     return value_pointer;
 }
