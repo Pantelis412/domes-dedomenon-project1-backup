@@ -230,6 +230,7 @@ void state_update(State state, KeyState keys) {
 			Object temp=vector_node_value(state->objects,vectornode);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
 			vector_set_at(state->objects,nodecounter_for_spaceship,temp);
 			vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+			free(temp);
 		}
 	}
 
@@ -263,6 +264,7 @@ void state_update(State state, KeyState keys) {
 						temp=vector_node_value(state->objects,vectornode2);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται ο αστεροειδής
 						vector_set_at(state->objects,nodecounter_for_asteroid,temp);
 						vector_remove_last(state->objects);//στη συνεχεια διαγράφω το τελευταίο στοιχείο
+						free(temp);
 					}
 					else{
 						//διαγράφω τον αστεροειδή που συγκρούστηκε
