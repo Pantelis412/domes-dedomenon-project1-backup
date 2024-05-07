@@ -36,14 +36,16 @@ void test_state_create() {
 	TEST_ASSERT(info->score == 0);
 	
 	// Προσθέστε επιπλέον ελέγχους
-	TEST_ASSERT(state->speed_factor==1);
-	TEST_ASSERT(state->next_bullet == 0);
-	TEST_ASSERT(state->objects != NULL);
+	TEST_ASSERT(info->spaceship !=NULL);
+	TEST_ASSERT(info->spaceship->type==SPACESHIP);
 }
 
 void test_state_objects(){
 	State state = state_create();
 	TEST_ASSERT(state != NULL && state_info(state) != NULL);
+	List list_objects=list_create(free);
+
+	TEST_ASSERT(list_objects != NULL);
 
 }
 
