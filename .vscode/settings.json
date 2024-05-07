@@ -29,6 +29,7 @@
 		"arg8": "#",
 	},
 	"files.associations": {
-		"adtvector.h": "c"
+		"adtvector.h": "c",
+		"raylib.h": "c"
 	},
 }
