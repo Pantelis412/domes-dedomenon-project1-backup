@@ -46,5 +46,20 @@ void interface_draw_frame(State state) {
             DrawCircle(object->position.x, -object->position.y, object->size, WHITE);
         }
     }
+    //Σχεδιασμός διαστημοπλοίου
+    Vector2 thirty_pixels={30,30};
+    Vector2 spaceship_position=state_info(state)->spaceship->position;
+    spaceship_position.y*=-1;
+    Vector2 starting_pos1=vec2_add(spaceship_position,thirty_pixels);
+    DrawLineV(starting_pos1,spaceship_position, BLUE);
+    vec2_scale(thirty_pixels,-1);
+    Vector2 starting_pos2=vec2_add(spaceship_position,thirty_pixels);
+    DrawLineV(starting_pos2,spaceship_position, BLUE);
+    DrawLineV(starting_pos1,starting_pos2,BLUE);
     
+
+    // Σχεδιάζουμε το σκορ και το FPS counter
+	DrawText(TextFormat("%04i", state_info(state)->score), 20, 20, 40, GRAY);
+	DrawFPS(SCREEN_WIDTH - 80, 0);
+
 }
