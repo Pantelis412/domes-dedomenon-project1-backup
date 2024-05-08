@@ -30,14 +30,13 @@ void interface_draw_frame(State state) {
     Vector2 top_left={0,SCREEN_HEIGHT};
     top_left=vec2_add(top_left,state_info(state)->spaceship->position);
     top_left.y*=-1;
-    Vector2 bottom_right;
+    Vector2 bottom_right={SCREEN_WIDTH,0};
     bottom_right=vec2_add(bottom_right,state_info(state)->spaceship->position);
     bottom_right.y*=-1;
 
     // Σχεδιάζουμε το διαστημόπλοιο, τους αστεροειδής και τις σφαίρες μέσω της state_objects()
     List objects_on_screen = state_objects(state, top_left, bottom_right);
-    ListNode listnode=list_first(objects_on_screen);
-    for(listnode; listnode!=LIST_EOF; listnode=list_next(objects_on_screen,listnode)){
+    for(ListNode listnode=list_first(objects_on_screen); listnode!=LIST_EOF; listnode=list_next(objects_on_screen,listnode)){
         Object object=list_node_value(objects_on_screen,listnode);
         if(object->type == ASTEROID){
             DrawCircle(object->position.x, -object->position.y, object->size, BROWN);//για αστεροειδής
