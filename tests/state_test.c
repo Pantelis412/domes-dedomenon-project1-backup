@@ -71,7 +71,7 @@ void test_state_update() {
 
 	// Προσθέστε επιπλέον ελέγχους
 
-	// test gia pause
+	// //test gia pause
 	// keys.p = true;
     // state_update(state, &keys);
     // TEST_ASSERT( state_info(state)->paused );
