@@ -275,6 +275,7 @@ void state_update(State state, KeyState keys) {
 						temp=vector_node_value(state->objects,vectornode);//αντιγράφω το περιεχόμενο του τελευταίου κόμβου του vector σε αυτόν που βρίσκεται η σφαίρα
 						vector_set_at(state->objects,nodecounter_for_bullet,temp);
 						vector_remove_last(state->objects);//στη συνεχεια διγράφω το τελευταίο στοιχείο
+						free(temp);
 					}
 					//Προσθέτουμε τους αστεροειδείς στο τέλος του vector
 					if(flag==true){
