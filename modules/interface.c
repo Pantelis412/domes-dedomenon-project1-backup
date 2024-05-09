@@ -45,6 +45,7 @@ Vector2 translation_vector=vec2_add(screen_vector,vec2_scale(state_info(state)->
     List objects_on_screen = state_objects(state, top_left, bottom_right);
     for(ListNode listnode=list_first(objects_on_screen); listnode!=LIST_EOF; listnode=list_next(objects_on_screen,listnode)){
         Object object=list_node_value(objects_on_screen,listnode);
+        screen_vector=vec2_add(object->position,translation_vector);
         if(object->type == ASTEROID){
             DrawCircle(object->position.x + translation_vector.x, -object->position.y-translation_vector.y, object->size, BROWN);//για αστεροειδής
         }
