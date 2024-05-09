@@ -16,10 +16,13 @@ __Α.Μ.__: sdi2300079
 Συμπληρώστε εδώ τις ασκήσεις (και τυχόν bonus) που παραδίδετε. Αν κάποια άσκηση
 βρίσκεται σε μη αναμενόμενα αρχεία αναφέρετε και τα αρχεία αυτά.
 
+Ασκήσεις 1-4 και 6.
+
 - Άσκηση 1: state_info(...),state_objects(...), επιπλέον έλεγχοι στο test_create(), δημιουργία του test_state_obgjects()
 - Άσκηση 2: state_update(...)
 - Άσκηση 3: add_bullet(...), add_half_asteroids(...), συγκρούσεις αστεροειδή με διαστημόπλοιο και με σφαίρα, κατάλληλη ενημέρωση του score
 - Άσκηση 4: set_find_eq_or_greater(Set set, Pointer value), set_find_eq_or_smaller(Set set, Pointer value)
+- Άσκηση 6: όμοια με την interface από game example, μετατροπή συντεταγμένων
 
 ### Documentation
 
@@ -49,6 +52,7 @@ __Α.Μ.__: sdi2300079
 ### Άσκηση 5
 
 ### Άσκηση 6
+όμοια με την interface από game example και μετατροπή συντεταγμένων
 
 
 Συμπληρώστε εδώ __όσο documentation χρειάζεται__ ώστε οι βαθμολογητές να
