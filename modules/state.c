@@ -6,12 +6,6 @@
 #include "state.h"
 #include "vec2.h"
 
-int compare_ints(Pointer a, Pointer b) {
-    int* ia = a;
-    int* ib = b;
-    return *ia - *ib;       // αρνητικός, μηδέν ή θετικός, ανάλογα με τη διάταξη των a,b
-}
-
 // Οι ολοκληρωμένες πληροφορίες της κατάστασης του παιχνιδιού.
 // Ο τύπος State είναι pointer σε αυτό το struct, αλλά το ίδιο το struct
 // δεν είναι ορατό στον χρήστη.

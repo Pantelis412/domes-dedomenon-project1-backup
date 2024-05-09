@@ -20,8 +20,8 @@ KeyState keys_init(){
 
 void update_and_draw() {
 	KeyState keys=keys_init();
-	state_update(state,keys);
-	interface_draw_frame(state);
+	// state_update(state,keys);
+	// interface_draw_frame(state);
 	free(keys);
 }
 
