@@ -144,4 +144,7 @@ StateInfo state_info(State state) {
 List state_objects(State state, Vector2 top_left, Vector2 bottom_right){
     List list_objects_x=list_create(free);
     ListNode list_node_x= LIST_BOF;
+	for(SetNode setnode=set_first(state->objects_x); setnode != SET_EOF; setnode=set_next(state->objects_x)){
+		if(set)
+	}
 }
